@@ -9,3 +9,5 @@ azure-functions==1.0.8
 azure-nspkg==3.0.2
 pandas
 datetime
+requests
+requests_ntlm

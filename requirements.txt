@@ -2,6 +2,10 @@
 # The Python Worker is managed by Azure Functions platform
 # Manually managing azure-functions-worker may cause unexpected issues
 
-azure-data-tables
+azure-common==1.1.24
+azure-cosmosdb-nspkg==2.0.2
+azure-cosmosdb-table==1.0.6
+azure-functions==1.0.8
+azure-nspkg==3.0.2
 pandas
 datetime

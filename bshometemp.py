@@ -13,6 +13,9 @@ import pandas as pd
 import os
 import json
 
+import streamlit.components.v1 as components
+from PIL import Image
+
 #Azure Storage Table connection details
 CONNECTION_STRING = "DefaultEndpointsProtocol=https;AccountName=bshometemp;AccountKey=5hWbuKuuPfNySSFcgJ9R9nZoPNLwxhu0aV3cva6xu9bgxagvAJPhigcZ2lhSKAOaVlmro9yxIkqFQl2k+Glwbg==;EndpointSuffix=core.windows.net"
 SOURCE_TABLE = "bshometemptable"
@@ -91,8 +94,6 @@ def Check_Server(url, auth):
 
 
 
-
-
 # Use the full page instead of a narrow central column
 st.set_page_config(layout="wide")
 
@@ -104,6 +105,9 @@ st.set_page_config(layout="wide")
 
 with st.expander("Home Temperature Expander"):
     
+    image = Image.open('bshometemp.jpg')
+    st.image(image, caption='IoT Demo Project')
+
     #Date picker
     start_date = st.date_input(
         "Select start date",
@@ -147,6 +151,9 @@ with st.expander("Home Temperature Expander"):
     
 with st.expander("Test Historian Expander"):
     
+    image2 = Image.open('wonderware.jpg')
+    st.image(image2, caption='Wonderware Demo Project')
+
     #Input Widgets
     start_date2 = st.date_input(
         "Select start date2",
@@ -191,3 +198,14 @@ with st.expander("Test Historian Expander"):
         height=550
     )
     st.altair_chart((chart2).interactive(), use_container_width=True)
+
+col1, col2 = st.columns(2)
+
+with st.expander("iFrame from other Websites Expander"):
+    with col1:
+        # embed USDA SNOTEL chart
+        components.iframe("https://www.nrcs.usda.gov/Internet/WCIS/AWS_PLOTS/siteCharts/POR/WTEQ/CO//Lizard%20Head%20Pass.html", width=600, height=500,scrolling=False)
+    with col2:
+        # embed USDA SNOTEL chart
+        components.iframe("https://www.nrcs.usda.gov/Internet/WCIS/AWS_PLOTS/siteCharts/POR/WTEQ/CO//Scotch%20Creek.html", width=600, height=500,scrolling=False)
+ 

@@ -118,7 +118,8 @@ with st.expander("Home Temperature Expander"):
 
 
     #Filter and retrieve Azure Storage Table
-    fq = "Timestamp gt datetime'" + start_date.strftime("%Y-%m-%d") + "T00:00:00.0000000Z'" + " and Timestamp lt datetime'" + stop_date.strftime("%Y-%m-%d") + "T00:00:00.0000000Z'"
+    #fq = "Timestamp gt datetime'" + start_date.strftime("%Y-%m-%d") + "T00:00:00.0000000Z'" + " and Timestamp lt datetime'" + stop_date.strftime("%Y-%m-%d") + "T00:00:00.0000000Z'"
+    fq = "Timestamp gt datetime'" + start_date.strftime("%Y-%m-%d") + "T00:00:00.0000000Z'" + " and Timestamp lt datetime'" + stop_date.strftime("%Y-%m-%dT%H:%M:%S.0000000Z") + "'"
     #fq = ''
     ts = set_table_service()
     df = get_dataframe_from_table_storage_table(table_service=ts,
@@ -149,63 +150,72 @@ with st.expander("Home Temperature Expander"):
 
 
     
-# with st.expander("Test Historian Expander"):
+with st.expander("Test Historian Expander"):
     
-#     image2 = Image.open('wonderware.jpg')
-#     st.image(image2, caption='Wonderware Demo Project')
+    image2 = Image.open('wonderware.jpg')
+    st.image(image2, caption='Wonderware Demo Project')
 
-#     #Input Widgets
-#     start_date2 = st.date_input(
-#         "Select start date2",
-#         datetime(datetime.now().year,datetime.now().month,datetime.now().day - 1))
-#     stop_date2 = st.date_input(
-#         "Select stop date2",
-#         datetime.now())
-#     ret_mode = st.selectbox(
-#      'Select Retrieval Mode',
-#      ('Average', 'delta', 'full', 'cyclic'))
-#     resolution = st.selectbox(
-#      'Select Resolution',
-#      ('900000', '1800000', '3600000'))
+    #Input Widgets    
+    hist_tag = st.selectbox(
+     'Select Historian Tag',
+     ('MR-HSBWTP.Loop040_scaled.5M', 'MR-HSBWTP.Loop040_setpoint.5M', 'MR-HSBWTP.Loop001_scaled.5M', 'MR-HSBWTP.Loop012_setpoint.5M', 'MR-HSBWTP.Lime101_feeder_A_speed.5M', 'MR-HSBWTP.Lime102_feeder_A_speed.5M', 'MR-HSBWTP.Lime101_slaker_temperature.5M', 'MR-HSBWTP.Lime102_slaker_temperature.5M', 'MR-HSBWTP.Loop002_PIDout.5M', 'MR-HSBWTP.Loop006_PIDout.5M', 'MR-HSBWTP.Loop040_scaled.5M', 'MR-HSBWTP.Loop002_scaled.5M', 'MR-HSBWTP.Loop006_scaled.5M', 'MR-HSBWTP.Loop016A_scaled.5M', 'MR-HSBWTP.Loop016B_scaled.5M', 'MR-HSBWTP.Loop002_setpoint.5M', 'MR-HSBWTP.Loop006_setpoint.5M', 'MR-HSBWTP.Loop004_scaled.5M', 'MR-HSBWTP.Loop013_scaled.5M', 'MR-HSBWTP.Loop003_scaled.5M', 'MR-HSBWTP.Loop007_scaled.5M', 'MR-HSBWTP.Loop004_on_time.5M', 'MR-HSBWTP.Loop004_off_time.5M', 'MR-HSBWTP.Loop013_on_time.5M', 'MR-HSBWTP.Loop013_off_time.5M', 'MR-HSBWTP.Loop003_setpoint.5M', 'MR-HSBWTP.Loop004_setpoint.5M', 'MR-HSBWTP.Loop007_setpoint.5M', 'MR-HSBWTP.Loop013_setpoint.5M', 'MR-HSBWTP.Poly001_dosage.5M', 'MR-HSBWTP.Poly002_dosage.5M', 'MR-HSBWTP.Poly003_dosage.5M', 'MR-HSBWTP.Loop042_scaled.5M'))
+
+    start_date2 = st.date_input(
+        "Select start date2",
+        datetime(datetime.now().year,datetime.now().month,datetime.now().day - 1))
+    stop_date2 = st.date_input(
+        "Select stop date2",
+        datetime.now())
+    ret_mode = st.selectbox(
+     'Select Retrieval Mode',
+     ('Average', 'delta', 'full', 'cyclic'))
+    resolution = st.selectbox(
+     'Select Resolution',
+     ('900000', '1800000', '3600000'))
+    version = st.selectbox(
+     'Select Version',
+     ('Latest', 'Original'))
         
-#     # Authentication
-#     user = 'DataUser'
-#     pswd = '0ldW0rk$59711'
-#     auth = HttpNtlmAuth(user, pswd)
-#     req_method = 'GET'
+    # Authentication
+    user = 'DataUser'
+    pswd = '0ldW0rk$59711'
+    auth = HttpNtlmAuth(user, pswd)
+    req_method = 'GET'
 
-#     url = "https://data.copperenv.com:32569/Historian/v1/ProcessValues?$filter=(FQN+eq+'WSP.WSI_INFL_TEMP_DISP')+and+DateTime+ge+datetimeoffset'"
-#     url += start_date2.strftime("%Y-%m-%d") + "T00:00:00.000Z'+and+DateTime+le+datetimeoffset'" + stop_date2.strftime("%Y-%m-%d") + "T00:00:00.000Z'"
-#     url += "&RetrievalMode=" + ret_mode
-#     url += "&Resolution=" + resolution
+    url = "https://data.copperenv.com:32569/Historian/v1/ProcessValues?$filter=(FQN+eq+"
+    url +="'" + hist_tag + "'" + ")+and+DateTime+ge+datetimeoffset'"
+    url += start_date2.strftime("%Y-%m-%d") + "T00:00:00.000Z'+and+DateTime+le+datetimeoffset'" + stop_date2.strftime("%Y-%m-%d") + "T00:00:00.000Z'"
+    url += "&RetrievalMode=" + ret_mode
+    url += "&Resolution=" + resolution
+    #url += "&Version=" + version
 
-#     output = get_results(url, auth, req_method)
+    output = get_results(url, auth, req_method)
 
-#     #Clean up Pandas dataframe for charting in Altair
-#     output = output.drop(labels="OpcQuality", axis=1)
-#     output = output.drop(labels="Text", axis=1)
-#     output = output.drop(labels="FQN", axis=1)
-#     output["DateTime"] = pd.to_datetime(output["DateTime"])
-#     output["Value"] = pd.to_numeric(output["Value"])
+    #Clean up Pandas dataframe for charting in Altair
+    output = output.drop(labels="OpcQuality", axis=1)
+    output = output.drop(labels="Text", axis=1)
+    output = output.drop(labels="FQN", axis=1)
+    output["DateTime"] = pd.to_datetime(output["DateTime"])
+    output["Value"] = pd.to_numeric(output["Value"])
     
-#     #Chart in Altair and display in Streamlit
-#     chart2 = alt.Chart(output).mark_point().encode(
-#         x='DateTime:T',
-#         y='Value:Q',
-#         tooltip=[alt.Tooltip('DateTime', timeUnit="hoursminutesseconds"), 'Value']
-#     ).properties(
-#         width=750,
-#         height=550
-#     )
-#     st.altair_chart((chart2).interactive(), use_container_width=True)
+    #Chart in Altair and display in Streamlit
+    chart2 = alt.Chart(output).mark_point().encode(
+        x='DateTime:T',
+        y='Value:Q',
+        tooltip=[alt.Tooltip('DateTime', timeUnit="hoursminutesseconds"), 'Value']
+    ).properties(
+        width=750,
+        height=550
+    )
+    st.altair_chart((chart2).interactive(), use_container_width=True)
 
-# col1, col2 = st.columns(2)
+col1, col2 = st.columns(2)
 
-# with st.expander("iFrame from other Websites Expander"):
-#     with col1:
-#         # embed USDA SNOTEL chart
-#         components.iframe("https://www.nrcs.usda.gov/Internet/WCIS/AWS_PLOTS/siteCharts/POR/WTEQ/CO//Lizard%20Head%20Pass.html", width=600, height=500,scrolling=False)
-#     with col2:
-#         # embed USDA SNOTEL chart
-#         components.iframe("https://www.nrcs.usda.gov/Internet/WCIS/AWS_PLOTS/siteCharts/POR/WTEQ/CO//Scotch%20Creek.html", width=600, height=500,scrolling=False)
+with st.expander("iFrame from other Websites Expander"):
+    with col1:
+        # embed USDA SNOTEL chart
+        components.iframe("https://www.nrcs.usda.gov/Internet/WCIS/AWS_PLOTS/siteCharts/POR/WTEQ/CO//Lizard%20Head%20Pass.html", width=600, height=500,scrolling=False)
+    with col2:
+        # embed USDA SNOTEL chart
+        components.iframe("https://www.nrcs.usda.gov/Internet/WCIS/AWS_PLOTS/siteCharts/POR/WTEQ/CO//Scotch%20Creek.html", width=600, height=500,scrolling=False)
  
